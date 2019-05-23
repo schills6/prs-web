@@ -3,8 +3,6 @@ package com.prs.web;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Optional;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +34,9 @@ public class ProductTests {
 	
 	@Test
 	public void testProductAddAndDelete() {
-		Optional <Vendor> v = vendorRepository.findById(2);
-		Product p = new Product (v.get(), "partNumber", "name", 50.00, "unit", "photoPath");
+		Iterable <Vendor> vendors = vendorRepository.findAll();
+		Vendor v = vendors.iterator().next();
+		Product p = new Product (v, "partNumber", "name", 50.00, "unit", "photoPath");
 		assertNotNull(productRepository.save(p));
 		assertEquals("partNumber", p.getPartNumber());
 	}

@@ -1,5 +1,6 @@
 package com.prs.web;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +91,20 @@ public class PurchaseRequestController {
 			jr = JsonResponse.getInstance(e);
 		}
 		return jr;
+	}
+	
+	@PostMapping("/submit-new")
+	public JsonResponse submitNew(@RequestBody PurchaseRequest pr) {
+		JsonResponse jr = null;
+		try {
+				pr.setStatus("New");
+				pr.setSubmittedDate(LocalDateTime.now());
+				purchaseRequestRepository.save(pr);
+			}
+		catch (Exception e) {
+			jr = JsonResponse.getInstance(e);
+		}
+		return jr;		
 	}
 
 	

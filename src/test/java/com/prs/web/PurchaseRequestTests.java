@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +21,10 @@ import com.prs.db.UserRepository;
 @SpringBootTest
 @Transactional
 public class PurchaseRequestTests {
+	
 	@Autowired
 	private PurchaseRequestRepository purchaseRequestRepository;
+	@Autowired
 	private UserRepository userRepository;
 	
 	@Test
@@ -32,14 +33,15 @@ public class PurchaseRequestTests {
 		assertNotNull(purchaserequests);	
 	}
 	
-	/*@Test
+	@Test
 	public void testPurchaseRequestAddAndDelete() {
-		Optional<User> u = userRepository.findByUserName("eheinrich");
-		LocalDate dateNeeded = LocalDate.parse("yyyy-MM-dd");
+		Iterable<User> users = userRepository.findAll();
+		User u = users.iterator().next();
+		LocalDate dateNeeded = LocalDate.parse("2019-05-25");
 		LocalDateTime submittedDate = LocalDateTime.now();
-		PurchaseRequest pr = new PurchaseRequest(u.get(), "description", "justification",
-												dateNeeded, "Mail", "new", 88.10, submittedDate,"stupid");
+		PurchaseRequest pr = new PurchaseRequest(u, "description", "justification",
+												dateNeeded, "Mail", "new", 88.10, submittedDate,"");
 		assertNotNull(purchaseRequestRepository.save(pr)); 
 		assertEquals("description", pr.getDescription());	
-	}*/
+	}
 }
