@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.prs.business.JsonResponse;
+import com.prs.business.PurchaseRequest;
 import com.prs.business.PurchaseRequestLineItem;
 import com.prs.db.PurchaseRequestLineItemRepository;
 
@@ -49,6 +50,7 @@ public class PurchaseRequestLineItemController {
 		// needs to be caught
 		try {
 			jr = JsonResponse.getInstance(purchaseRequestLineItemRepository.save(prli));
+			recalculateTotal(prli.getPurchaseRequest());
 		} catch (Exception e) {
 			jr = JsonResponse.getInstance(e);
 		}
@@ -64,6 +66,7 @@ public class PurchaseRequestLineItemController {
 		try {
 			if (purchaseRequestLineItemRepository.existsById(prli.getId())) {
 				jr = JsonResponse.getInstance(purchaseRequestLineItemRepository.save(prli));
+				recalculateTotal(prli.getPurchaseRequest());
 			} else {
 				jr = JsonResponse
 						.getInstance("Purchase Request Line Item id: " + prli.getId() + "does not exist and you are attempting to save it.");
@@ -82,6 +85,7 @@ public class PurchaseRequestLineItemController {
 		try {
 			if (purchaseRequestLineItemRepository.existsById(prli.getId())) {
 				purchaseRequestLineItemRepository.delete(prli);
+				recalculateTotal(prli.getPurchaseRequest());
 				jr = JsonResponse.getInstance("PurchaseRequestLineItem deleted.");
 			} else {
 				jr = JsonResponse
@@ -93,5 +97,13 @@ public class PurchaseRequestLineItemController {
 		return jr;
 	}
 
+	private void recalculateTotal(PurchaseRequest pr) {
+		double sum = 0.00;
+		Iterable<PurchaseRequestLineItem> prli = purchaseRequestLineItemRepository.findAllByPurchaseRequestId(pr.getId());
+		for (PurchaseRequestLineItem purchaseRequestLineItem : prli) {
+			sum += purchaseRequestLineItem.getQuantity()*purchaseRequestLineItem.getProduct().getPrice();
+		}
+		pr.setTotal(sum);
+	}
 	
 }
