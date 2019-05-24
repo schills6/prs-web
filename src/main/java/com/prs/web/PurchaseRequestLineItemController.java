@@ -110,6 +110,24 @@ public class PurchaseRequestLineItemController {
 		purchaseRequestRepository.save(pr);	
 	}
 	
+	@GetMapping("/lines-for-pr/{id}")
+	public JsonResponse requestReview(@PathVariable int id) {
+		JsonResponse jr = null;		
+		try {
+			if(purchaseRequestLineItemRepository.existsById(id)) {
+				Iterable<PurchaseRequestLineItem> purchaseRequestLineItems = purchaseRequestLineItemRepository.findAllByPurchaseRequestId(id);
+			jr=JsonResponse.getInstance(purchaseRequestLineItems);
+			}
+			else {
+				jr = JsonResponse.getInstance("No purchase request available with this ID");
+			}
+		}
+		catch (Exception e) {
+			jr = JsonResponse.getInstance(e);
+		}
+		return jr;
+		}
 	
 	
+
 }
