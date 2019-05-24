@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.prs.business.JsonResponse;
 import com.prs.business.PurchaseRequest;
+import com.prs.business.User;
 import com.prs.db.PurchaseRequestRepository;
+
 
 @RestController
 @RequestMapping("/purchase-requests")
@@ -16,6 +18,7 @@ public class PurchaseRequestController {
 
 	@Autowired
 	private PurchaseRequestRepository purchaseRequestRepository;
+	
 
 	@GetMapping("/")
 	public JsonResponse getAll() {
@@ -107,5 +110,65 @@ public class PurchaseRequestController {
 		return jr;		
 	}
 
+	@PutMapping("/submit-review")
+	public JsonResponse submitForReview(@RequestBody PurchaseRequest pr) {
+		JsonResponse jr = null;
+		try {
+			if (pr.getTotal() <= 50.00){
+				pr.setStatus("Approved");
+				pr.setSubmittedDate(LocalDateTime.now());
+				purchaseRequestRepository.save(pr);
+			}
+			else {
+				pr.setStatus("Review");
+				pr.setSubmittedDate(LocalDateTime.now());
+				purchaseRequestRepository.save(pr);
+			}
+		}
+		catch (Exception e) {
+			jr = JsonResponse.getInstance(e);
+		}
+		return jr;
+	}
+	
+	@GetMapping("/list-review")
+	public JsonResponse requestReview(@RequestBody User u) {
+		JsonResponse jr = null;
+		try {
+			Iterable<PurchaseRequest> purchaseRequests = purchaseRequestRepository.findByStatusAndUserNot("Review", u);
+			jr=JsonResponse.getInstance(purchaseRequests);
+			}
+		catch (Exception e) {
+			jr = JsonResponse.getInstance(e);
+		}
+		return jr;		
+	}
+	
+	@PutMapping("/approve")
+	public JsonResponse requestApprove(@RequestBody PurchaseRequest pr) {
+		JsonResponse jr = null;
+		try {
+				pr.setStatus("Approved");
+				purchaseRequestRepository.save(pr);
+			}
+		catch (Exception e) {
+			jr = JsonResponse.getInstance(e);
+		}
+		return jr;
+	}
+	
+	@PutMapping("/reject")
+	public JsonResponse requestReject(@RequestBody PurchaseRequest pr) {
+		JsonResponse jr = null;
+		try {
+				pr.setStatus("Rejected");
+				purchaseRequestRepository.save(pr);
+			}
+		catch (Exception e) {
+			jr = JsonResponse.getInstance(e);
+		}
+		return jr;
+	}
+	
 	
 }

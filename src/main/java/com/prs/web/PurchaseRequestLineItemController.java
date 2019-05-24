@@ -9,6 +9,7 @@ import com.prs.business.JsonResponse;
 import com.prs.business.PurchaseRequest;
 import com.prs.business.PurchaseRequestLineItem;
 import com.prs.db.PurchaseRequestLineItemRepository;
+import com.prs.db.PurchaseRequestRepository;
 
 @RestController
 @RequestMapping("/purchase-request-line-items")
@@ -16,6 +17,8 @@ public class PurchaseRequestLineItemController {
 
 	@Autowired
 	private PurchaseRequestLineItemRepository purchaseRequestLineItemRepository;
+	@Autowired
+	private PurchaseRequestRepository purchaseRequestRepository;
 
 	@GetMapping("/")
 	public JsonResponse getAll() {
@@ -104,6 +107,9 @@ public class PurchaseRequestLineItemController {
 			sum += purchaseRequestLineItem.getQuantity()*purchaseRequestLineItem.getProduct().getPrice();
 		}
 		pr.setTotal(sum);
+		purchaseRequestRepository.save(pr);	
 	}
+	
+	
 	
 }
