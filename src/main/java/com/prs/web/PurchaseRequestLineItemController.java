@@ -91,8 +91,7 @@ public class PurchaseRequestLineItemController {
 				recalculateTotal(prli.getPurchaseRequest());
 				jr = JsonResponse.getInstance("PurchaseRequestLineItem deleted.");
 			} else {
-				jr = JsonResponse
-						.getInstance("Purchase Request Line Item id: " + prli.getId() + " does not exist and you are attempting to delete it.");
+				jr = JsonResponse.getInstance("Purchase Request Line Item id: " + prli.getId() + " does not exist and you are attempting to delete it.");
 			}
 		} catch (Exception e) {
 			jr = JsonResponse.getInstance(e);
@@ -116,7 +115,7 @@ public class PurchaseRequestLineItemController {
 		try {
 			if(purchaseRequestLineItemRepository.existsById(id)) {
 				Iterable<PurchaseRequestLineItem> purchaseRequestLineItems = purchaseRequestLineItemRepository.findAllByPurchaseRequestId(id);
-			jr=JsonResponse.getInstance(purchaseRequestLineItems);
+				jr=JsonResponse.getInstance(purchaseRequestLineItems);
 			}
 			else {
 				jr = JsonResponse.getInstance("No purchase request available with this ID");

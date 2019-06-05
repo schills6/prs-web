@@ -102,7 +102,7 @@ public class PurchaseRequestController {
 		try {
 				pr.setStatus("New");
 				pr.setSubmittedDate(LocalDateTime.now());
-				purchaseRequestRepository.save(pr);
+				jr = JsonResponse.getInstance(purchaseRequestRepository.save(pr));
 			}
 		catch (Exception e) {
 			jr = JsonResponse.getInstance(e);
@@ -118,11 +118,13 @@ public class PurchaseRequestController {
 				pr.setStatus("Approved");
 				pr.setSubmittedDate(LocalDateTime.now());
 				purchaseRequestRepository.save(pr);
+				jr = JsonResponse.getInstance("Purchase Request Approved.");
 			}
 			else {
 				pr.setStatus("Review");
 				pr.setSubmittedDate(LocalDateTime.now());
 				purchaseRequestRepository.save(pr);
+				jr = JsonResponse.getInstance("Purchase Request submitted for review.");
 			}
 		}
 		catch (Exception e) {
@@ -150,6 +152,7 @@ public class PurchaseRequestController {
 		try {
 				pr.setStatus("Approved");
 				purchaseRequestRepository.save(pr);
+				jr = JsonResponse.getInstance("Purchase Request approved.");
 			}
 		catch (Exception e) {
 			jr = JsonResponse.getInstance(e);
@@ -163,6 +166,7 @@ public class PurchaseRequestController {
 		try {
 				pr.setStatus("Rejected");
 				purchaseRequestRepository.save(pr);
+				jr = JsonResponse.getInstance("Purchase Request rejected.");
 			}
 		catch (Exception e) {
 			jr = JsonResponse.getInstance(e);
